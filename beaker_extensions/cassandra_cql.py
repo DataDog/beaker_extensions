@@ -152,7 +152,9 @@ class _CassandraBackedDict(object):
         cluster_params['default_retry_policy'] = _NextHostRetryPolicy()
 
         log.info(
-            "Connecting to cassandra cluster with params %s", cluster_params
+            "Connecting to cassandra cluster with params %s and table %s",
+            cluster_params,
+            self.__table_cql_safe
         )
         return Cluster(**cluster_params)
 
