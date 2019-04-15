@@ -1,4 +1,5 @@
 from time import sleep
+import mock
 import unittest
 
 from nose.plugins.attrib import attr
@@ -173,7 +174,6 @@ class TestCassandraCqlRetry(CassandraCqlSetup, unittest.TestCase):
         c['k'] = 'v'
         assert s.calls == 1
 
-
     def test_succeeds_after_retrying(self):
         class DummySession(object):
             def __init__(self):
@@ -206,4 +206,22 @@ class TestCassandraCqlRetry(CassandraCqlSetup, unittest.TestCase):
         c._CassandraBackedDict__session = s  # sad face
         with self.assertRaises(cassandra.DriverException):
             c['k'] = 'v'
+        assert s.calls == 3
+
+    def test_new_cluster_connection_after_retries(self):
+        class DummySession(object):
+            def __init__(self):
+                self.calls = 0
+            def execute(self, *args, **kwargs):
+                self.calls += 1
+                raise cassandra.DriverException()
+
+        c = _CassandraBackedDict('testns',
+                      url='localhost:9042', keyspace=self.__keyspace,
+                      column_family=self.__table, expire=1, tries=3)
+        s = DummySession()
+        c._CassandraBackedDict__session = s  # sad face
+        with self.assertRaises(cassandra.DriverException):
+            c['k'] = 'v'
+        assert c._CassandraBackedDict__session is s
         assert s.calls == 3
