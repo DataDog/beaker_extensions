@@ -204,8 +204,6 @@ class TestCassandraCqlRetry(CassandraCqlSetup, unittest.TestCase):
                       column_family=self.__table, expire=1, tries=3)
         s = DummySession()
         c._CassandraBackedDict__session = s  # sad face
-        with self.assertRaises(cassandra.DriverException):
-            c['k'] = 'v'
         assert s.calls == 3
 
     def test_new_cluster_connection_after_retries(self):
@@ -223,5 +221,6 @@ class TestCassandraCqlRetry(CassandraCqlSetup, unittest.TestCase):
         c._CassandraBackedDict__session = s  # sad face
         with self.assertRaises(cassandra.DriverException):
             c['k'] = 'v'
-        assert c._CassandraBackedDict__session is s
         assert s.calls == 3
+        assert c._CassandraBackedDict__session is not s
+        c['k'] = 'v'
