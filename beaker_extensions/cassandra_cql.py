@@ -77,7 +77,7 @@ class _CassandraBackedDict(object):
 
     _RETRYABLE_EXCEPTIONS = (cassandra.DriverException, cassandra.RequestExecutionException)
 
-    def __init__(self, namespace, urls=None, keyspace=None, column_family=None, **params):
+    def __init__(self, namespace, url=None, keyspace=None, column_family=None, **params):
         if not keyspace:
             raise MissingCacheParameter("keyspace is required")
         if re.search(r"\W", keyspace):
@@ -92,7 +92,7 @@ class _CassandraBackedDict(object):
         self._tries = int(params.pop("tries", 1))
 
         # Set parameters and create cluster
-        self.__url = params.get("url")
+        self.__url = url
         self.__max_schema_agreement_wait = params.get("max_schema_agreement_wait")
         self.__datacenter = params.get("datacenter")
         cluster = self.__connect_to_cluster()
