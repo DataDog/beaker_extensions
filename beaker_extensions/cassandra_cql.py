@@ -127,8 +127,7 @@ class _CassandraBackedDict(object):
         # in 'contact_points'. To avoid this, resolve the the host
         # explicitly and pass in up to 2 random ones.
         url_list = [h.strip() for h in self.__url.split(";")]
-        hosts = [h.split(":", 1)[0] for h in url_list]
-        contact_points = self.__resolve_hostnames(hosts)
+        contact_points = [h.split(":", 1)[0] for h in url_list]
         random.shuffle(contact_points)
         cluster_params["contact_points"] = contact_points[:2]
 
