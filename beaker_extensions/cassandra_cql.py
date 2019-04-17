@@ -121,15 +121,10 @@ class _CassandraBackedDict(object):
     def __connect_to_cluster(self):
         cluster_params = {}
 
-        # If the config specifies a hostname which resolves to multiple
-        # hosts (eg dns roundrobin or consul), the driver will have a
-        # shorter timeout than we want since the timeout is applied per item
-        # in 'contact_points'. To avoid this, resolve the the host
-        # explicitly and pass in up to 2 random ones.
-        url_list = [h.strip() for h in self.__url.split(";")]
-        contact_points = [h.split(":", 1)[0] for h in url_list]
-        random.shuffle(contact_points)
-        cluster_params["contact_points"] = contact_points[:2]
+        # Remove port from url passed in init and set to the cluster's contact
+        # point. Given one contact point, cassandra will automatically determine
+        # the remaining ones.
+        cluster_params["contact_points"] = [self.__url.split(":", 1)[0]]
 
         if self.__max_schema_agreement_wait:
             cluster_params["max_schema_agreement_wait"] = int(self.__max_schema_agreement_wait)
