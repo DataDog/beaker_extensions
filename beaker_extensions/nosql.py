@@ -8,7 +8,7 @@ from beaker.exceptions import MissingCacheParameter
 
 try:
     import cPickle as pickle
-except:
+except Exception:
     import pickle
 
 log = logging.getLogger(__name__)
@@ -50,10 +50,7 @@ class NoSqlManager(NamespaceManager):
         self.db_conn = None
 
     def get_creation_lock(self, key):
-        return file_synchronizer(
-            identifier="tccontainer/funclock/%s" % self.namespace,
-            lock_dir=self.lock_dir,
-        )
+        return file_synchronizer(identifier="tccontainer/funclock/%s" % self.namespace, lock_dir=self.lock_dir)
 
     def _format_key(self, key):
         return self.namespace + "_"

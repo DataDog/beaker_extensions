@@ -29,23 +29,12 @@ class CassandraManager(NoSqlManager):
     If it doesn't exist under given keyspace, it is created automatically.
     """
 
-    def __init__(
-        self,
-        namespace,
-        url=None,
-        data_dir=None,
-        lock_dir=None,
-        keyspace=None,
-        column_family=None,
-        **params
-    ):
+    def __init__(self, namespace, url=None, data_dir=None, lock_dir=None, keyspace=None, column_family=None, **params):
         if not keyspace:
             raise MissingCacheParameter("keyspace is required")
         self.keyspace = keyspace
         self.column_family = column_family or "beaker"
-        NoSqlManager.__init__(
-            self, namespace, url=url, data_dir=data_dir, lock_dir=lock_dir, **params
-        )
+        NoSqlManager.__init__(self, namespace, url=url, data_dir=data_dir, lock_dir=lock_dir, **params)
 
     def open_connection(self, host, port, **params):
         self.pool = pycassa.ConnectionPool(self.keyspace)
@@ -79,8 +68,8 @@ class CassandraManager(NoSqlManager):
         return "%s:%s" % (self.namespace, key.replace(" ", "\302\267"))
 
     def do_remove(self):
-        for key, empty in cf.get_range(column_count=0, filter_empty=False):
-            cf.remove(key)
+        for key, empty in self.cf.get_range(column_count=0, filter_empty=False):
+            self.cf.remove(key)
 
     def keys(self):
         return list(
