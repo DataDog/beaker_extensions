@@ -1,7 +1,5 @@
 # New Hotness
 
- virtualenv ./venv && source ./venv/bin/activate
-
 ./build.sh
 
 ## TODO
