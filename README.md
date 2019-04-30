@@ -1,15 +1,9 @@
-# New Hotness
+# How to run tests locally
 
+```
+# install requirements
 ./build.sh
-
-## TODO
-
-
-
- - cassandra prod is 3.0.17
- - redis is sort of irrelevant so we run latest
-
-# Old and Busted 
+```
 
 ## Installation
 
