@@ -15,9 +15,7 @@ log = logging.getLogger(__name__)
 
 
 class NoSqlManager(NamespaceManager):
-    def __init__(
-        self, namespace, url=None, data_dir=None, lock_dir=None, expire=None, **params
-    ):
+    def __init__(self, namespace, url=None, data_dir=None, lock_dir=None, expire=None, **params):
         NamespaceManager.__init__(self, namespace)
 
         if not url:

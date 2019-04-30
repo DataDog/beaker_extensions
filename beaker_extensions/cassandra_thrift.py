@@ -8,9 +8,7 @@ from beaker_extensions.nosql import pickle
 try:
     import pycassa
 except ImportError:
-    raise InvalidCacheBackendError(
-        "Cassandra cache backend requires the 'pycassa' library"
-    )
+    raise InvalidCacheBackendError("Cassandra cache backend requires the 'pycassa' library")
 
 log = logging.getLogger(__name__)
 
@@ -72,9 +70,7 @@ class CassandraManager(NoSqlManager):
             self.cf.remove(key)
 
     def keys(self):
-        return list(
-            key for key, empty in self.cf.get_range(column_count=0, filter_empty=False)
-        )
+        return list(key for key, empty in self.cf.get_range(column_count=0, filter_empty=False))
 
 
 class CassandraContainer(Container):
